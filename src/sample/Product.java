@@ -13,10 +13,10 @@ public class Product {
 
 
     public Product() {
-        this.name.set("Produkt domyslny");
-        this.productCount.set(0);
-        this.productType.set(ProductType.DEFAULT);
-        this.doesProductNeedsFridge.set(false);
+        this.name = new SimpleStringProperty("Produkt domyslny");
+        this.productCount = new SimpleIntegerProperty(0);
+        this.productType = new SimpleObjectProperty<>(ProductType.DEFAULT);
+        this.doesProductNeedsFridge = new SimpleBooleanProperty(false);
     }
 
     public Product(String name, int productCount, ProductType productType, boolean doesProductNeedsFridge) {

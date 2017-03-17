@@ -1,14 +1,17 @@
 package sample;
 
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -23,6 +26,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Inwentarz");
+        primaryStage.getIcons().add(new Image("http://icons.iconarchive.com/icons/chrisl21/minecraft/256/Chest-icon.png"));
 
         initRootLayout();
 
@@ -65,8 +69,40 @@ public class Main extends Application {
 
         }
     }
+
     public Stage getPrimaryStage(){
         return primaryStage;
+    }
+
+    public boolean showProductEditDialog(Product product){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("ProductEditDialog.fxml"));
+            AnchorPane page = loader.load();
+
+            //create the dialog stage
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Edit product");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            //set the person into the controller
+            ProductEditController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setProduct( product);
+
+            //showing dialog and waiting to close it
+            dialogStage.showAndWait();
+
+            return controller.isOkClicked();
+
+        }catch (IOException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private ObservableList<Product> productData = FXCollections.observableArrayList();

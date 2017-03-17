@@ -76,4 +76,33 @@ public class Controller {
             productFridgeLabel.setText("null");
         }
     }
+
+    @FXML
+    private void handleNewProduct(){
+        Product tempProduct = new Product();
+        boolean okClicked = main.showProductEditDialog(tempProduct);
+        if(okClicked){
+            main.getProductData().add(tempProduct);
+        }
+    }
+
+    @FXML
+    private void handleEditProduct(){
+        Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
+        if (selectedProduct != null){
+            boolean okClicked = main.showProductEditDialog(selectedProduct);
+            if(okClicked){
+                showProductDetails(selectedProduct);
+            }
+        }else{
+            //nothing selected
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initOwner(main.getPrimaryStage());
+            alert.setTitle("Brak wyboru");
+            alert.setHeaderText("Nie wybrano produktu");
+            alert.setContentText("Wybierz produkt z listy");
+
+            alert.showAndWait();
+        }
+    }
 }
