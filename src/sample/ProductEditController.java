@@ -76,6 +76,9 @@ public class ProductEditController {
         if (nameField.getText() == null || nameField.getText().length() == 0){
             errorMessage += "Błędna nazwa produktu\n";
         }
+        else if(nameField.getText().compareTo("default") == 0){
+            errorMessage+= "Nazwa nie została zmieniona z domyślnej\n";
+        }
         if (countField.getText() == null || countField.getText().length() == 0){
             errorMessage += "Błędna liczba produktów\n";
         } else {
@@ -88,13 +91,16 @@ public class ProductEditController {
         if (productTypeComboBox.getValue() == null){
             errorMessage += "Nie zaznaczono typu\n";
         }
+        else if(productTypeComboBox.getValue() == ProductType.DEFAULT){
+            errorMessage += "Typ nie może być domyślny\n";
+        }
         if (errorMessage.length() == 0)
             return true;
         else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.initOwner(dialogStage);
             alert.setTitle("Błędne dane!");
-            alert.setHeaderText("Please correct invalid fields");
+            alert.setHeaderText("Proszę skorygować dane");
             alert.setContentText(errorMessage);
 
             alert.showAndWait();

@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -56,7 +57,7 @@ public class Main extends Application {
             //Loading overview from fxml
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("sample.fxml"));
-            GridPane shopInventory = loader.load();
+            SplitPane shopInventory = loader.load();
 
             //Setting shop overview in center of root layout
             rootLayout.setCenter(shopInventory);

@@ -13,7 +13,7 @@ public class Product {
 
 
     public Product() {
-        this.name = new SimpleStringProperty("Produkt domyslny");
+        this.name = new SimpleStringProperty("default");
         this.productCount = new SimpleIntegerProperty(0);
         this.productType = new SimpleObjectProperty<>(ProductType.DEFAULT);
         this.doesProductNeedsFridge = new SimpleBooleanProperty(false);
