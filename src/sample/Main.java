@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -15,8 +16,13 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
+import java.util.prefs.Preferences;
 
 public class Main extends Application {
 
@@ -45,10 +51,20 @@ public class Main extends Application {
             //Showing scene containing the root layout
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
+
+            RootLayoutController controller = loader.getController();
+            controller.setMain(this);
+
             primaryStage.show();
         }
         catch (IOException e){
             e.printStackTrace();
+        }
+
+        // Try to load last opened person file.
+        File file = getInventoryFilePath();
+        if (file != null) {
+            loadProductDataFromFile(file);
         }
     }
     //this function loads the inventory view
@@ -107,6 +123,78 @@ public class Main extends Application {
     }
 
     private ObservableList<Product> productData = FXCollections.observableArrayList();
+
+    public File getInventoryFilePath(){
+        Preferences prefs = Preferences.userNodeForPackage(Main.class);
+        String path = prefs.get("filePath", null);
+        if(path != null){
+            return new File(path);
+        } else {
+            return null;
+        }
+    }
+
+    public void setInventoryFilePath(File file){
+        Preferences prefs = Preferences.userNodeForPackage(Main.class);
+        if(file != null){
+            prefs.put("filePath", file.getPath());
+
+            primaryStage.setTitle("Inwentarz - " + file.getName());
+        } else {
+            prefs.remove("filePath");
+
+            primaryStage.setTitle("Inwentarz");
+        }
+    }
+
+    public void saveProductDataToFile(File file){
+        try{
+            JAXBContext context = JAXBContext.newInstance(ProductListWrapper.class);
+
+            Marshaller m = context.createMarshaller();
+            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            // Wrapping product data
+            ProductListWrapper wrapper = new ProductListWrapper();
+            wrapper.setProducts(productData);
+            // Marshalling and saving XML to the file.
+            m.marshal(wrapper, file);
+            // Save the file path to the registry.
+            setInventoryFilePath(file);
+        } catch (Exception e) { // catches ANY exception
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not save data");
+            alert.setContentText("Could not save data to file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
+    }
+
+    public void loadProductDataFromFile(File file) {
+        try {
+            JAXBContext context = JAXBContext
+                    .newInstance(ProductListWrapper.class);
+            Unmarshaller um = context.createUnmarshaller();
+
+            // Reading XML from the file and unmarshalling.
+            ProductListWrapper wrapper = (ProductListWrapper) um.unmarshal(file);
+
+            productData.clear();
+            productData.addAll(wrapper.getProducts());
+
+            // Save the file path to the registry.
+            setInventoryFilePath(file);
+
+        } catch (Exception e) { // catches ANY exception
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not load data");
+            alert.setContentText("Could not load data from file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
+    }
 
     public Main(){
         productData.add(new Product("Kluski", 15, ProductType.FOOD, true));
