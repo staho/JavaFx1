@@ -197,15 +197,7 @@ public class Main extends Application {
     }
 
     public Main(){
-        productData.add(new Product("Kluski", 15, ProductType.FOOD, true));
-        productData.add(new Product("Piwo", 24, ProductType.DRINK, true));
-        productData.add(new Product("Paracetamol", 5, ProductType.DRUG, false));
-        productData.add(new Product("Banan", 10, ProductType.FOOD, false));
-        productData.add(new Product("Jogurt", 40, ProductType.FOOD, true));
-        productData.add(new Product("Sok Trymbark", 40, ProductType.DRINK, false));
-        productData.add(new Product("Lody Grymcan", 20, ProductType.FOOD, true));
-        productData.add(new Product("Lizaki ChukaChups", 70, ProductType.SWEETS, false));
-        productData.add(new Product("Woda", 30, ProductType.DRINK, false));
+
 
     }
     public ObservableList<Product> getProductData(){
