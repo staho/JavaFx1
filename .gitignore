@@ -6,3 +6,5 @@ out/production/JavaFx1/sample/ProductType$2.class
 *.zip
 
 out/production/JavaFx1/sample/ProductType.class
+
+*.class
